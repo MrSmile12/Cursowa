@@ -1,0 +1,63 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="SortingApp.MainWindow"
+        Title="Sorting Algorithms GUI"
+        Width="900" Height="600"
+        Background="White" Foreground="Black">
+
+    <Grid ColumnDefinitions="250, *">
+        <Border Grid.Column="0" BorderBrush="Black" BorderThickness="0,0,2,0" Padding="15">
+            <StackPanel Spacing="10">
+                <TextBlock Text="НАЛАШТУВАННЯ" FontWeight="Bold" FontSize="16" TextAlignment="Center"/>
+                
+                <TextBlock Text="Алгоритм:" FontWeight="Bold"/>
+                <ComboBox x:Name="ComboAlgorithm" SelectedIndex="0" HorizontalAlignment="Stretch" Background="White" Foreground="Black" BorderBrush="Black">
+                    <ComboBoxItem Content="Quick Sort"/>
+                    <ComboBoxItem Content="Heap Sort"/>
+                    <ComboBoxItem Content="Smooth Sort"/>
+                    <ComboBoxItem Content="Intro Sort"/>
+                </ComboBox>
+
+                <TextBlock Text="Розмір масиву:" FontWeight="Bold"/>
+                <TextBox x:Name="TextSize" Text="1000" Background="White" Foreground="Black" BorderBrush="Black"/>
+
+                <TextBlock Text="Мінімальне значення:" FontWeight="Bold"/>
+                <TextBox x:Name="TextMin" Text="-1000" Background="White" Foreground="Black" BorderBrush="Black"/>
+
+                <TextBlock Text="Максимальне значення:" FontWeight="Bold"/>
+                <TextBox x:Name="TextMax" Text="1000" Background="White" Foreground="Black" BorderBrush="Black"/>
+
+                <TextBlock Text="Стан масиву:" FontWeight="Bold"/>
+                <ComboBox x:Name="ComboState" SelectedIndex="0" HorizontalAlignment="Stretch" Background="White" Foreground="Black" BorderBrush="Black">
+                    <ComboBoxItem Content="Випадковий"/>
+                    <ComboBoxItem Content="За зростанням"/>
+                    <ComboBoxItem Content="За спаданням"/>
+                </ComboBox>
+
+                <TextBlock Text="Напрям сортування:" FontWeight="Bold"/>
+                <ComboBox x:Name="ComboDirection" SelectedIndex="0" HorizontalAlignment="Stretch" Background="White" Foreground="Black" BorderBrush="Black">
+                    <ComboBoxItem Content="За зростанням"/>
+                    <ComboBoxItem Content="За спаданням"/>
+                </ComboBox>
+
+                <Button x:Name="BtnSort" Content="ГЕНЕРУВАТИ ТА СОРТУВАТИ" Click="BtnSort_Click"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                        Background="Black" Foreground="White" FontWeight="Bold" Margin="0,20,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <Grid Grid.Column="1" RowDefinitions="Auto, *, Auto, *" Margin="15">
+            <TextBlock Grid.Row="0" Text="ЗГЕНЕРОВАНИЙ МАСИВ:" FontWeight="Bold" Margin="0,0,0,5"/>
+            <TextBox Grid.Row="1" x:Name="TextOriginal" AcceptsReturn="True" TextWrapping="Wrap" IsReadOnly="True"
+                     Background="White" Foreground="Black" BorderBrush="Black" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+
+            <TextBlock Grid.Row="2" Text="ВІДСОРТОВАНИЙ МАСИВ:" FontWeight="Bold" Margin="0,15,0,5"/>
+            <TextBox Grid.Row="3" x:Name="TextSorted" AcceptsReturn="True" TextWrapping="Wrap" IsReadOnly="True"
+                     Background="White" Foreground="Black" BorderBrush="Black" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+        </Grid>
+
+        <Border Grid.Column="1" VerticalAlignment="Bottom" Background="Black" Padding="10" Margin="15,0,15,15" CornerRadius="5">
+            <TextBlock x:Name="TextMetrics" Text="Результати з'являться тут..." Foreground="White" FontWeight="Bold" TextAlignment="Center"/>
+        </Border>
+    </Grid>
+</Window>
