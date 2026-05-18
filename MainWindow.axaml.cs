@@ -1,8 +1,8 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Threading;
 using System;
-using System.Linq;
+using System.IO;
+using System.Linq;       
 using System.Threading.Tasks;
 
 namespace SortingApp
@@ -51,6 +51,7 @@ namespace SortingApp
             TextMetrics.Text = $"Час: {metrics.ExecutionTime.TotalMilliseconds:F4} мс | Порівнянь: {metrics.Comparisons} | Перестановок: {metrics.Swaps}";
 
             BtnSort.IsEnabled = true;
+            BtnSave.IsEnabled = true;
         }
 
         private int[] GenerateArray(int size, int min, int max, int state)
@@ -66,6 +67,63 @@ namespace SortingApp
             if (state == 2) { Array.Sort(arr); Array.Reverse(arr); }
 
             return arr;
+            
+            
+        }
+        // --- ФУНКЦІЯ ВАЛІДАЦІЇ (Тільки цифри та мінус) ---
+        private void NumberValidation_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (sender is TextBox textBox)
+            {
+                string input = textBox.Text;
+                
+                // Дозволяємо порожній рядок або лише один мінус (для початку вводу від'ємних чисел)
+                if (string.IsNullOrEmpty(input) || input == "-") return;
+
+                // Якщо введено щось окрім числа (наприклад, букви)
+                if (!int.TryParse(input, out _))
+                {
+                    // Фільтруємо текст: залишаємо тільки цифри, а мінус - лише якщо він на 1-й позиції
+                    string cleanText = new string(input.Where((c, i) => char.IsDigit(c) || (i == 0 && c == '-')).ToArray());
+                    
+                    int caret = textBox.CaretIndex;
+                    textBox.Text = cleanText;
+                    
+                    // Повертаємо курсор на правильне місце, щоб він не стрибав
+                    textBox.CaretIndex = Math.Max(0, caret - 1); 
+                }
+            }
+        }
+
+        // --- ФУНКЦІЯ ЗБЕРЕЖЕННЯ У ФАЙЛ ---
+        private async void BtnSave_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // Формуємо текст для збереження
+                string content = "=== РЕЗУЛЬТАТИ СОРТУВАННЯ ===\n";
+                content += TextMetrics.Text + "\n";
+                content += "-----------------------------------\n";
+                content += "ЗГЕНЕРОВАНИЙ МАСИВ:\n";
+                content += TextOriginal.Text + "\n\n";
+                content += "ВІДСОРТОВАНИЙ МАСИВ:\n";
+                content += TextSorted.Text + "\n";
+
+                // Зберігаємо файл прямо на Робочий Стіл комп'ютера
+                string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                string filePath = Path.Combine(desktopPath, "Результати_Сортування.txt");
+
+                await File.WriteAllTextAsync(filePath, content);
+
+                // Даємо візуальний фідбек користувачу
+                BtnSave.Content = "ЗБЕРЕЖЕНО НА РОБОЧИЙ СТІЛ!";
+                await Task.Delay(2000); // Чекаємо 2 секунди
+                BtnSave.Content = "ЗБЕРЕГТИ В ФАЙЛ";
+            }
+            catch (Exception ex)
+            {
+                TextMetrics.Text = $"Помилка збереження: {ex.Message}";
+            }
         }
     }
 }

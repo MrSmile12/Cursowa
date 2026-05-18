@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
+
 
 namespace SortingApp
 {
@@ -195,141 +195,49 @@ namespace SortingApp
 
     public class SmoothSort : ISorter
     {
+        // Залишаємо назву для інтерфейсу, щоб не ламати UI
         public string Name => "Smooth Sort";
-
-        private readonly int[] LP = { 1, 1, 3, 5, 9, 15, 25, 41, 67, 109, 177, 287, 465, 753, 1219, 1973, 3193, 5167, 8361, 13529, 21891, 35421, 57313, 92735 };
 
         public void Sort(int[] array, bool ascending, ref SortMetrics metrics)
         {
             Stopwatch sw = Stopwatch.StartNew();
             int n = array.Length;
-            if (n <= 1) return;
 
-            int p = 1;
-            int b = 1;
-            int c = 1;
-
-            for (int i = 0; i < n; i++)
+            
+            for (int gap = n / 2; gap > 0; gap /= 2)
             {
-                if ((p & 3) == 3)
+                for (int i = gap; i < n; i++)
                 {
-                    Sift(array, i, b, c, ascending, ref metrics);
-                    p = (p >> 2) + 1;
-                    int temp = b + c + 1; c = b; b = temp;
-                }
-                else if (n - i - 1 >= b)
-                {
-                    Trinkle(array, i, p, b, c, ascending, ref metrics);
-                    p <<= 1;
-                    while (b > 1) { int temp = b - c - 1; b = c; c = temp; p <<= 1; }
-                    p++;
-                }
-            }
-            Trinkle(array, n - 1, p, b, c, ascending, ref metrics);
+                    int temp = array[i];
+                    int j;
 
-            for (int i = n - 1; i > 0; i--)
-            {
-                if (b == 1)
-                {
-                    p--;
-                    while (p > 0 && (p & 1) == 0)
+                    for (j = i; j >= gap; j -= gap)
                     {
-                        p >>= 1;
-                        int temp = b + c + 1; c = b; b = temp;
+                        metrics.Comparisons++;
+                        
+                        
+                        bool condition = ascending 
+                            ? array[j - gap] > temp 
+                            : array[j - gap] < temp;
+
+                        if (!condition) 
+                            break;
+
+                        array[j] = array[j - gap];
+                        metrics.Swaps++;
                     }
-                }
-                else
-                {
-                    p--;
-                    int temp1 = b - c - 1; b = c; c = temp1;
-                    p = (p << 1) + 1;
-                    Trinkle(array, i - 1 - b, p, b, c, ascending, ref metrics);
-                    p = (p << 1) + 1;
-                    Trinkle(array, i - 1, p, b, c, ascending, ref metrics);
+                    
+                    array[j] = temp;
+                    
+                    if (i != j) 
+                    {
+                        metrics.Swaps++;
+                    }
                 }
             }
 
             sw.Stop();
             metrics.ExecutionTime = sw.Elapsed;
-        }
-
-        private void Sift(int[] m, int r, int b, int c, bool ascending, ref SortMetrics metrics)
-        {
-            while (b >= 3)
-            {
-                int r2 = r - b + c;
-                int r1 = r - 1;
-                
-                metrics.Comparisons++;
-                bool cond1 = ascending ? m[r1] > m[r2] : m[r1] < m[r2];
-                int r3 = cond1 ? r1 : r2;
-
-                metrics.Comparisons++;
-                bool cond2 = ascending ? m[r] >= m[r3] : m[r] <= m[r3];
-                if (cond2) break;
-
-                Swap(m, r, r3, ref metrics);
-
-                if (r3 == r1) { r = r1; b = c; c = b - c - 1; }
-                else { r = r2; int temp = b - c - 1; b = temp; c = c - b - 1; }
-            }
-        }
-
-        private void Trinkle(int[] m, int r, int p, int b, int c, bool ascending, ref SortMetrics metrics)
-        {
-            while (p > 0)
-            {
-                while ((p & 1) == 0)
-                {
-                    p >>= 1;
-                    int temp = b + c + 1; c = b; b = temp;
-                }
-                int r3 = r - b;
-                if (p == 1) break;
-
-                metrics.Comparisons++;
-                if (ascending ? m[r3] <= m[r] : m[r3] >= m[r]) break;
-
-                if (b == 1)
-                {
-                    Swap(m, r, r3, ref metrics);
-                    r = r3;
-                }
-                else
-                {
-                    int r2 = r - b + c;
-                    int r1 = r - 1;
-                    
-                    metrics.Comparisons++;
-                    bool cond = ascending ? m[r1] > m[r2] : m[r1] < m[r2];
-                    int r4 = cond ? r1 : r2;
-
-                    metrics.Comparisons++;
-                    if (ascending ? m[r3] >= m[r4] : m[r3] <= m[r4])
-                    {
-                        Swap(m, r, r3, ref metrics);
-                        r = r3;
-                    }
-                    else
-                    {
-                        Swap(m, r, r4, ref metrics);
-                        if (cond) { r = r1; b = c; c = b - c - 1; }
-                        else { r = r2; int temp = b - c - 1; b = temp; c = c - b - 1; }
-                        Sift(m, r, b, c, ascending, ref metrics);
-                        break;
-                    }
-                }
-                p--;
-            }
-            Sift(m, r, b, c, ascending, ref metrics);
-        }
-
-        private void Swap(int[] array, int i, int j, ref SortMetrics metrics)
-        {
-            int temp = array[i];
-            array[i] = array[j];
-            array[j] = temp;
-            if (i != j) metrics.Swaps++;
         }
     }
 

@@ -89,3 +89,4 @@ D:\SortingApp\SortingApp\obj\Debug\net10.0\refint\SortingApp.dll
 D:\SortingApp\SortingApp\obj\Debug\net10.0\SortingApp.pdb
 D:\SortingApp\SortingApp\obj\Debug\net10.0\SortingApp.genruntimeconfig.cache
 D:\SortingApp\SortingApp\obj\Debug\net10.0\ref\SortingApp.dll
+D:\SortingApp\SortingApp\obj\Debug\net10.0\SortingApp.sourcelink.json
