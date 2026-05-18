@@ -144,7 +144,7 @@ namespace SortingApp
                 await File.WriteAllTextAsync(filePath, content);
 
                
-                BtnSave.Content = "ЗБЕРЕЖЕНО НА РОБОЧИЙ СТІЛ!";
+                BtnSave.Content = "ЗБЕРЕЖЕНО НА РС!";
                 await Task.Delay(2000);
                 BtnSave.Content = "ЗБЕРЕГТИ В ФАЙЛ";
             }
