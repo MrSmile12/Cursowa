@@ -195,7 +195,7 @@ namespace SortingApp
 
     public class SmoothSort : ISorter
     {
-        // Залишаємо назву для інтерфейсу, щоб не ламати UI
+        
         public string Name => "Smooth Sort";
 
         public void Sort(int[] array, bool ascending, ref SortMetrics metrics)
