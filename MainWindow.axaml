@@ -2,10 +2,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="SortingApp.MainWindow"
         Title="Sorting Algorithms GUI"
-        Width="900" Height="600"
+        Width="1000" Height="700"
         Background="White" Foreground="Black">
 
-    <Grid ColumnDefinitions="250, *">
+    <Grid ColumnDefinitions="270, *">
         <Border Grid.Column="0" BorderBrush="Black" BorderThickness="0,0,2,0" Padding="15">
             <StackPanel Spacing="10">
                 <TextBlock Text="НАЛАШТУВАННЯ" FontWeight="Bold" FontSize="16" TextAlignment="Center"/>
@@ -19,13 +19,13 @@
                 </ComboBox>
 
                 <TextBlock Text="Розмір масиву:" FontWeight="Bold"/>
-                <TextBox x:Name="TextSize" Text="1000" TextChanged="NumberValidation_TextChanged" Background="White" Foreground="Black" BorderBrush="Black"/>
+                <TextBox x:Name="TextSize" Text="100" TextChanged="NumberValidation_TextChanged" Background="White" Foreground="Black" BorderBrush="Black"/>
 
                 <TextBlock Text="Мінімальне значення:" FontWeight="Bold"/>
-                <TextBox x:Name="TextMin" Text="-1000" TextChanged="NumberValidation_TextChanged" Background="White" Foreground="Black" BorderBrush="Black"/>
+                <TextBox x:Name="TextMin" Text="0" TextChanged="NumberValidation_TextChanged" Background="White" Foreground="Black" BorderBrush="Black"/>
 
                 <TextBlock Text="Максимальне значення:" FontWeight="Bold"/>
-                <TextBox x:Name="TextMax" Text="1000" TextChanged="NumberValidation_TextChanged" Background="White" Foreground="Black" BorderBrush="Black"/>
+                <TextBox x:Name="TextMax" Text="100" TextChanged="NumberValidation_TextChanged" Background="White" Foreground="Black" BorderBrush="Black"/>
 
                 <TextBlock Text="Стан масиву:" FontWeight="Bold"/>
                 <ComboBox x:Name="ComboState" SelectedIndex="0" HorizontalAlignment="Stretch" Background="White" Foreground="Black" BorderBrush="Black">
@@ -40,31 +40,60 @@
                     <ComboBoxItem Content="За спаданням"/>
                 </ComboBox>
 
-                <TextBlock Text="Ручний ввід (через пробіл):" FontWeight="Bold" Margin="0,10,0,0"/>
-                <TextBox x:Name="TextManualArray" Watermark="Наприклад: 5 -3 12 0 8" TextChanged="ArrayInputValidation_TextChanged" Background="White" Foreground="Black" BorderBrush="Black"/>
-                <TextBlock Text="*Якщо заповнено, налаштування вище ігноруються" FontSize="11" Foreground="DimGray" TextWrapping="Wrap"/>
-                <Button x:Name="BtnSort" Content="ГЕНЕРУВАТИ,СОРТУВАТИ" Click="BtnSort_Click"
+                <TextBlock Text="Ручний ввід (через пробіл):" FontWeight="Bold" Margin="0,5,0,0"/>
+                <TextBox x:Name="TextManualArray" PlaceholderText="Наприклад: 5 -3 12 0 8" TextChanged="ArrayInputValidation_TextChanged" Background="White" Foreground="Black" BorderBrush="Black"/>
+
+                <StackPanel Margin="0,10,0,0">
+                    <CheckBox x:Name="CheckVisualize" Content="Візуалізація (до 300 ел.)" FontWeight="Bold"/>
+                    <CheckBox x:Name="CheckDebug" Content="Покроковий лог (до 100 ел.)" FontWeight="Bold"/>
+                    <TextBlock Text="*Увага: увімкнення цих опцій суттєво уповільнює процес сортування." FontSize="10" Foreground="DimGray" TextWrapping="Wrap"/>
+                </StackPanel>
+
+                <Button x:Name="BtnSort" Content="ГЕНЕРУВАТИ ТА СОРТУВАТИ" Click="BtnSort_Click"
                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-                        Background="Black" Foreground="White" FontWeight="Bold" Margin="0,20,0,0"/>
+                        Background="Black" Foreground="White" FontWeight="Bold" Margin="0,15,0,0"/>
+
+                <Button x:Name="BtnCompare" Content="ПОРІВНЯТИ ВСІ АЛГОРИТМИ" Click="BtnCompare_Click"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                        Background="#4682B4" Foreground="White" FontWeight="Bold" Margin="0,5,0,0"/>
 
                 <Button x:Name="BtnSave" Content="ЗБЕРЕГТИ В ФАЙЛ" Click="BtnSave_Click" IsEnabled="False"
                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-                        Background="#2E8B57" Foreground="White" FontWeight="Bold" Margin="0,10,0,0"/>
+                        Background="#2E8B57" Foreground="White" FontWeight="Bold" Margin="0,5,0,0"/>
             </StackPanel>
         </Border>
 
-        <Grid Grid.Column="1" RowDefinitions="Auto, *, Auto, *" Margin="15">
-            <TextBlock Grid.Row="0" Text="ЗГЕНЕРОВАНИЙ МАСИВ:" FontWeight="Bold" Margin="0,0,0,5"/>
-            <TextBox Grid.Row="1" x:Name="TextOriginal" AcceptsReturn="True" TextWrapping="Wrap" IsReadOnly="True"
-                     Background="White" Foreground="Black" BorderBrush="Black" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+        <Grid Grid.Column="1" RowDefinitions="*, Auto">
+            
+            <TabControl x:Name="MainTabControl" Grid.Row="0" Margin="15" Background="White">
+                <TabItem Header="Текстовий результат">
+                    <Grid RowDefinitions="Auto, *, Auto, *">
+                        <TextBlock Grid.Row="0" Text="ЗГЕНЕРОВАНИЙ МАСИВ:" FontWeight="Bold" Margin="0,0,0,5"/>
+                        <TextBox Grid.Row="1" x:Name="TextOriginal" AcceptsReturn="True" TextWrapping="Wrap" IsReadOnly="True" Background="White" Foreground="Black" BorderBrush="Black" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
 
-            <TextBlock Grid.Row="2" Text="ВІДСОРТОВАНИЙ МАСИВ:" FontWeight="Bold" Margin="0,15,0,5"/>
-            <TextBox Grid.Row="3" x:Name="TextSorted" AcceptsReturn="True" TextWrapping="Wrap" IsReadOnly="True"
-                     Background="White" Foreground="Black" BorderBrush="Black" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                        <TextBlock Grid.Row="2" Text="ВІДСОРТОВАНИЙ МАСИВ:" FontWeight="Bold" Margin="0,15,0,5"/>
+                        <TextBox Grid.Row="3" x:Name="TextSorted" AcceptsReturn="True" TextWrapping="Wrap" IsReadOnly="True" Background="White" Foreground="Black" BorderBrush="Black" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                    </Grid>
+                </TabItem>
+                
+                <TabItem Header="Стовпчаста діаграма">
+                    <Canvas x:Name="CanvasVisualization" Background="#F9F9F9" Margin="5"/>
+                </TabItem>
+                
+                <TabItem Header="Покроковий лог (Debug)">
+                    <TextBox x:Name="TextDebug" AcceptsReturn="True" TextWrapping="Wrap" IsReadOnly="True" Background="#1E1E1E" Foreground="#D4D4D4" FontFamily="Consolas" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                </TabItem>
+
+                <TabItem Header="Аналіз алгоритмів">
+                    <TextBox x:Name="TextComparison" AcceptsReturn="True" TextWrapping="Wrap" IsReadOnly="True" 
+                             Background="#F4F6F9" Foreground="Black" FontFamily="Consolas" FontSize="14" 
+                             Padding="15" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                </TabItem>
+            </TabControl>
+
+            <Border Grid.Row="1" Background="Black" Padding="10" Margin="15,0,15,15" CornerRadius="5">
+                <TextBlock x:Name="TextMetrics" Text="Результати з'являться тут..." Foreground="White" FontWeight="Bold" TextAlignment="Center"/>
+            </Border>
         </Grid>
-
-        <Border Grid.Column="1" VerticalAlignment="Bottom" Background="Black" Padding="10" Margin="15,0,15,15" CornerRadius="5">
-            <TextBlock x:Name="TextMetrics" Text="Результати з'являться тут..." Foreground="White" FontWeight="Bold" TextAlignment="Center"/>
-        </Border>
     </Grid>
 </Window>
